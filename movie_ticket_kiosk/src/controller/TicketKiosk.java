@@ -1,17 +1,30 @@
-package main;
+package controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import model.Movie;
+import model.Product;
+import service.MovieService;
+
 public class TicketKiosk {
+	
+	private static MovieService movieService;
+	
+	private static List<Product> shoppingCart;
 
 	// add soda, popcorn, etc
 	// find a real threatre thingy
 	
 	public static void main(String[] args) {
-		List<String> movies = Arrays.asList("Star War II","Spiderman","Superman","Batman","Ironman","Captain America");
+		List<Movie> movies = movieService.getAll();
+		
+		List<Movie> selectedMovies = new ArrayList<>();
+		
 		System.out.println("Welcome to Lau's Cinemax!");
+		
 		double ticketPrice = 10.50;
 		
 		System.out.println("Available movies");
@@ -19,8 +32,9 @@ public class TicketKiosk {
 		System.out.println();
 		
 		for(int i=0;i<movies.size();i++) {
-			System.out.println((i+1)+". "+movies.get(i));
+			System.out.println((i+1)+". "+movies.get(i).getName()+" $"+String.format("%.2f", movies.get(i).getPrice()));
 		}
+		
 		System.out.println();
 		System.out.println("Please select a movie.");
 		System.out.print("Enter movie number:");
