@@ -14,24 +14,22 @@ import service.ProductService;
 public class TicketKiosk {
 
 	private ProductService productService;
-
-	private List<Product> shoppingCart;
-
+	
 	private Scanner scanner;
+	
+	private List<Movie> movies;
+	private List<Drink> drinks;
+	private List<Popcorn> popcorn;
 
 	TicketKiosk() {
 		productService = new ProductService();
-		shoppingCart = new ArrayList<>();
+		
+		movies = productService.getAllMovies();
+		drinks = productService.getAllDrinks();
+		popcorn = productService.getAllPopcorn();
 	}
 
-	private boolean isCancel(Object input) {
-		String cancel = "c", CANCEL = "C";
-		if (cancel.equals(input.toString()) || CANCEL.equals(input.toString())) {
-			System.out.println("\n\n");
-			return true;
-		}
-		return false;
-	}
+
 
 	// add soda, popcorn, etc
 	// find a real threatre thingy
@@ -41,9 +39,7 @@ public class TicketKiosk {
 	}
 
 	private void run() throws InterruptedException {
-		List<Movie> movies = productService.getAllMovies();
-		List<Drink> drinks = productService.getAllDrinks();
-		List<Popcorn> popcorn = productService.getAllPopcorn();
+		
 		
 		String input = null;
 
@@ -77,7 +73,7 @@ public class TicketKiosk {
 
 			Movie selectedMovie = movies.get(selectedMovieNumber - 1);
 
-			shoppingCart.add(selectedMovie);
+			productService.addProduct(selectedMovie);
 
 			System.out.println();
 			System.out.println("You selected " + selectedMovie.getName() + " at $"
@@ -95,8 +91,8 @@ public class TicketKiosk {
 
 			int numberOfTickets = Integer.parseInt(input);
 
-			double totalPrice = shoppingCart.stream().mapToDouble(i -> i.getPrice()).sum() * numberOfTickets;
-
+			double totalPrice = productService.getTotal();
+			
 			System.out.println("Your total: $" + String.format("%.2f", totalPrice));
 			
 			System.out.print("Snacks(s) or pay now(p): ");
@@ -110,22 +106,21 @@ public class TicketKiosk {
 			String payNow = input;
 
 			if (payNow.equals("p")) {
-
-				System.out.print("You have $");
-
-				scanner = new Scanner(System.in);
-
-				double customerMoney = scanner.nextDouble();
-
-				double change = customerMoney - totalPrice;
-
-				System.out.println(
-						"Here is " + numberOfTickets + " tickets and your change $" + String.format("%.2f", change));
-
-				System.out.println("Enjoy the movie!");
+				checkOut();
+				productService.resetShoppingCart();
 				
-				shoppingCart = new ArrayList<>();
+			} else if(payNow.equals("s")) {
 				
+				if(servePopcorn()==false){
+					continue;
+				}
+				
+				if(serveDrinks()==false){
+					continue;
+				}
+				
+				checkOut();
+			
 			} else {
 				System.out.println("Please try again.");
 			}
@@ -135,5 +130,76 @@ public class TicketKiosk {
 			System.out.println("\n\n");
 		}
 
+	}
+	
+	private boolean checkOut() {
+		System.out.print("You have $");
+
+		scanner = new Scanner(System.in);
+
+		double customerMoney = scanner.nextDouble();
+		
+		double totalPrice = productService.getTotal();
+
+		double change = customerMoney - totalPrice;
+		
+		int numberOfTickets = productService.getNumOfSelectedTickets();
+
+		System.out.println("Here is " + numberOfTickets + " tickets and your change $" + String.format("%.2f", change));
+
+		System.out.println("Enjoy the movie!");
+		
+		return true;
+	}
+	
+	private boolean servePopcorn() {
+		System.out.println("Select popcorn: ");
+		for (int i = 0; i < popcorn.size(); i++) {
+			System.out.println((i + 1) + ". " + popcorn.get(i).getName() + " $"
+					+ String.format("%.2f", popcorn.get(i).getPrice()));
+		}
+		
+		String input = scanner.next();
+		
+		if (isCancel(input)) {
+			return false;
+		}
+		
+		int selectedPopcornIndex = Integer.parseInt(input);
+		
+		Popcorn selectedPopcorn = popcorn.get(selectedPopcornIndex-1);
+		productService.addProduct(selectedPopcorn);
+		
+		return true;
+	}
+	
+	private boolean serveDrinks() {
+		System.out.println("Select drinks: ");
+		for (int i = 0; i < drinks.size(); i++) {
+			System.out.println((i + 1) + ". " + drinks.get(i).getName() + " $"
+					+ String.format("%.2f", drinks.get(i).getPrice()));
+		}
+		
+		String input = scanner.next();
+
+		if (isCancel(input)) {
+			return false;
+		}
+		
+		int selectedDrinkIndex = Integer.parseInt(input);
+		
+		Drink drink = drinks.get(selectedDrinkIndex-1);
+		productService.addProduct(drink);
+		
+		return true;
+	}
+	
+	private boolean isCancel(Object input) {
+		String cancel = "c", CANCEL = "C";
+		if (cancel.equals(input.toString()) || CANCEL.equals(input.toString())) {
+			System.out.println("\n\n");
+			return true;
+		}
+		return false;
 	}
 }

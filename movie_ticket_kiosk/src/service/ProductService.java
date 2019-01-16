@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import model.Drink;
 import model.Movie;
 import model.Popcorn;
+import model.Product;
 
 public class ProductService {
 
@@ -19,6 +20,8 @@ public class ProductService {
 	private Map<String,Drink> drinks;
 	
 	private Map<String,Popcorn> popcorn;
+	
+	private List<Product> shoppingCart;
 	
 	public ProductService(){
 		
@@ -53,6 +56,8 @@ public class ProductService {
 		popcorn.put(Popcorn.ORIVILLE+Popcorn.SMALL, new Popcorn(Popcorn.ORIVILLE, 5.00, Popcorn.SMALL));
 		popcorn.put(Popcorn.ORIVILLE+Popcorn.SMALL, new Popcorn(Popcorn.ORIVILLE, 7.75, Popcorn.MEDIUM));
 		popcorn.put(Popcorn.ORIVILLE+Popcorn.SMALL, new Popcorn(Popcorn.ORIVILLE, 10.00, Popcorn.LARGE));
+	
+		shoppingCart = new ArrayList<>();
 	}
 	
 	public List<Movie> getAllMovies(){
@@ -71,4 +76,35 @@ public class ProductService {
 		return movies.get(name);
 	}
 	
+	public void addProduct(Product product) {
+		this.shoppingCart.add(product);
+	}
+	
+	public void resetShoppingCart() {
+		shoppingCart = new ArrayList<>();
+	}
+	
+	public double getTotal() {
+		return shoppingCart.stream().mapToDouble(i -> i.getPrice()*i.getQuantity()).sum();
+	}
+	
+	public int getNumOfSelectedTickets() {
+		int total = 0;
+		for(Product product: shoppingCart){
+			if (product instanceof Movie) {
+				total+=(product.getQuantity());
+			}
+		} 
+		return total;
+	}
+	
+	public double getSelectedTicketsTotal() {
+		double total = 0.0;
+		for(Product product: shoppingCart){
+			if (product instanceof Movie) {
+				total+=(product.getQuantity()*product.getPrice());
+			}
+		} 
+		return total;
+	}
 }
