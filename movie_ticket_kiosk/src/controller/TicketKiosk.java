@@ -5,76 +5,135 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import model.Drink;
 import model.Movie;
+import model.Popcorn;
 import model.Product;
-import service.MovieService;
+import service.ProductService;
 
 public class TicketKiosk {
-	
-	private static MovieService movieService;
-	
-	private static List<Product> shoppingCart;
+
+	private ProductService productService;
+
+	private List<Product> shoppingCart;
+
+	private Scanner scanner;
+
+	TicketKiosk() {
+		productService = new ProductService();
+		shoppingCart = new ArrayList<>();
+	}
+
+	private boolean isCancel(Object input) {
+		String cancel = "c", CANCEL = "C";
+		if (cancel.equals(input.toString()) || CANCEL.equals(input.toString())) {
+			System.out.println("\n\n");
+			return true;
+		}
+		return false;
+	}
 
 	// add soda, popcorn, etc
 	// find a real threatre thingy
-	
-	public static void main(String[] args) {
-		List<Movie> movies = movieService.getAll();
+	public static void main(String[] args) throws InterruptedException {
+		TicketKiosk ticketKiosk = new TicketKiosk();
+		ticketKiosk.run();
+	}
+
+	private void run() throws InterruptedException {
+		List<Movie> movies = productService.getAllMovies();
+		List<Drink> drinks = productService.getAllDrinks();
+		List<Popcorn> popcorn = productService.getAllPopcorn();
 		
-		List<Movie> selectedMovies = new ArrayList<>();
-		
+		String input = null;
+
 		System.out.println("Welcome to Lau's Cinemax!");
 		
-		double ticketPrice = 10.50;
-		
-		System.out.println("Available movies");
-		System.out.println("Ticket price: $"+ticketPrice);
-		System.out.println();
-		
-		for(int i=0;i<movies.size();i++) {
-			System.out.println((i+1)+". "+movies.get(i).getName()+" $"+String.format("%.2f", movies.get(i).getPrice()));
-		}
-		
-		System.out.println();
-		System.out.println("Please select a movie.");
-		System.out.print("Enter movie number:");
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		int selectedMovieNumber = scanner.nextInt();
-		
-		System.out.println();
-		System.out.println("You selected "+movies.get(selectedMovieNumber-1));
-		
-		System.out.println();
-		System.out.print("How many tickets would you like? ");
-		scanner = new Scanner(System.in);
-		
-		int numberOfTickets = scanner.nextInt();
-		double totalPrice = ticketPrice*numberOfTickets;
-		System.out.println("Your total: $"+(String.format("%.2f", totalPrice)));
-		
-		System.out.print("Pay now(y/n): ");
-		
-		scanner = new Scanner(System.in);
-		
-		String payNow = scanner.nextLine();
-		
-		if(payNow.equals("y")) {
+		while (true) {
 			
-			System.out.print("You have $");
 			
+			System.out.println("Available movies");
+			System.out.println("Enter c to cancel your transcation at anytime.");
+			System.out.println();
+
+			for (int i = 0; i < movies.size(); i++) {
+				System.out.println((i + 1) + ". " + movies.get(i).getName() + " $"
+						+ String.format("%.2f", movies.get(i).getPrice()));
+			}
+
+			System.out.println();
+			System.out.println("Please select a movie.");
+			System.out.print("Enter movie number:");
+
 			scanner = new Scanner(System.in);
+
+			input = scanner.next();
+
+			if (isCancel(input)) {
+				continue;
+			}
+
+			int selectedMovieNumber = Integer.parseInt(input);
+
+			Movie selectedMovie = movies.get(selectedMovieNumber - 1);
+
+			shoppingCart.add(selectedMovie);
+
+			System.out.println();
+			System.out.println("You selected " + selectedMovie.getName() + " at $"
+					+ String.format("%.2f", selectedMovie.getPrice()));
+
+			System.out.println();
+			System.out.print("How many tickets would you like? ");
+			scanner = new Scanner(System.in);
+
+			input = scanner.next();
+
+			if (isCancel(input)) {
+				continue;
+			}
+
+			int numberOfTickets = Integer.parseInt(input);
+
+			double totalPrice = shoppingCart.stream().mapToDouble(i -> i.getPrice()).sum() * numberOfTickets;
+
+			System.out.println("Your total: $" + String.format("%.2f", totalPrice));
 			
-			double customerMoney = scanner.nextDouble();
+			System.out.print("Snacks(s) or pay now(p): ");
+
+			input = scanner.next();
+
+			if (isCancel(input)) {
+				continue;
+			}
+
+			String payNow = input;
+
+			if (payNow.equals("p")) {
+
+				System.out.print("You have $");
+
+				scanner = new Scanner(System.in);
+
+				double customerMoney = scanner.nextDouble();
+
+				double change = customerMoney - totalPrice;
+
+				System.out.println(
+						"Here is " + numberOfTickets + " tickets and your change $" + String.format("%.2f", change));
+
+				System.out.println("Enjoy the movie!");
+				
+				shoppingCart = new ArrayList<>();
+				
+			} else {
+				System.out.println("Please try again.");
+			}
 			
-			double change = customerMoney-totalPrice;
+			Thread.sleep(1500);
 			
-			System.out.println("Here is "+numberOfTickets+" tickets and your change $"+String.format("%.2f", change));
-			
-			System.out.println("Enjoy the movie!");
-		}else {
-			System.out.println("Please try again.");
+			System.out.println("\n\n");
 		}
+
 	}
 }
