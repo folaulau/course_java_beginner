@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.JPanel;
+
 import model.Drink;
 import model.Movie;
 import model.Popcorn;
