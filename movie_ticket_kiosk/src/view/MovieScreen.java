@@ -31,7 +31,7 @@ public class MovieScreen extends JPanel {
 	public MovieScreen() {
 		System.out.println("HomeScreen()");
 		
-		setBounds(0, 150, ScreenDimensionUtil.SCREEN_WIDTH, ScreenDimensionUtil.SCREEN_HEIGHT);
+		setBounds(0, 60, ScreenDimensionUtil.SCREEN_WIDTH, ScreenDimensionUtil.SCREEN_HEIGHT);
 		setLayout(null);
 		setBackground(Color.GRAY);
 		

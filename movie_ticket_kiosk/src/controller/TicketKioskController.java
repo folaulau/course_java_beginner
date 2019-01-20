@@ -55,13 +55,13 @@ public class TicketKioskController extends JFrame {
 		homeScreen.setLayout(null);
 		homeScreen.add(movieScreen);
 		
-		homeBtn.setBounds((int) (ScreenDimensionUtil.SCREEN_WIDTH * .1), (int) (ScreenDimensionUtil.SCREEN_HEIGHT * .1), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
+		homeBtn.setBounds(50, 10, ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
 		homeScreen.add(homeBtn);
 
-		snackBtn.setBounds((int) (ScreenDimensionUtil.SCREEN_WIDTH * .23), (int) (ScreenDimensionUtil.SCREEN_HEIGHT * .1), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
+		snackBtn.setBounds(50+ScreenDimensionUtil.BUTTON_WIDTH*1+10, 10, ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
 		homeScreen.add(snackBtn);
 
-		checkOutBtn.setBounds((int) (ScreenDimensionUtil.SCREEN_WIDTH * .36), (int) (ScreenDimensionUtil.SCREEN_HEIGHT * .1), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
+		checkOutBtn.setBounds(50+ScreenDimensionUtil.BUTTON_WIDTH*2+20, 10, ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
 		homeScreen.add(checkOutBtn);
 
 		homeBtn.addActionListener(new ActionListener() {
@@ -101,7 +101,7 @@ public class TicketKioskController extends JFrame {
 		
 		movieScreen.add(submitMovie);
 		
-		submitSnack.setBounds(50, (int)(ScreenDimensionUtil.SCREEN_HEIGHT*.45), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
+		submitSnack.setBounds(50, (int)(ScreenDimensionUtil.SCREEN_HEIGHT*.80), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
 		submitSnack.addActionListener(new ActionListener() {
 
 			@Override
