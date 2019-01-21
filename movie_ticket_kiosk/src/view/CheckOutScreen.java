@@ -6,20 +6,31 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import model.Drink;
+import model.Movie;
+import model.Popcorn;
+import model.Product;
+import service.ProductService;
 import utility.Contants;
+import utility.HtmlEntity;
 import utility.ScreenDimensionUtil;
 
 public class CheckOutScreen extends JPanel{
 
 	private JButton submit = new JButton("submit");
 	
+	private ProductService productService;
+	
 	public CheckOutScreen(){
 		System.out.println("CheckOutScreen()");
+		productService = new ProductService();
+		
 		setBounds(0, 60, ScreenDimensionUtil.SCREEN_WIDTH, ScreenDimensionUtil.SCREEN_HEIGHT);
 		//setBackground(Color.RED);
 		setLayout(null);
@@ -33,47 +44,57 @@ public class CheckOutScreen extends JPanel{
 				System.out.println("action submit btn");
 			}
 		});
-
-        String lyrics =  "<html>It's way too late to think of<br>" +
-                "Someone I would call now<br>" +
-                "And neon signs got tired<br>" +
-                "Red eye flights help the stars out<br>" +
-                "I'm safe in a corner<br>" +
-                "Just hours before me<br>" +
-                "<br>" +
-                "I'm waking with the roaches<br>" +
-                "The world has surrendered<br>" +
-                "I'm dating ancient ghosts<br>" +
-                "The ones I made friends with<br>" +
-                "The comfort of fireflies<br>" +
-                "Long gone before daylight<br>" +
-                "<br>" +
-                "And if I had one wishful field tonight<br>" +
-                "I'd ask for the sun to never rise<br>" +
-                "If God leant his voice for me to speak<br>" +
-                "I'd say go to bed, world<br>" +
-                "<br>" +
-                "I've always been too late<br>" +
-                "To see what's before me<br>" +
-                "And I know nothing sweeter than<br>" +
-                "Champaign from last New Years<br>" +
-                "Sweet music in my ears<br>" +
-                "And a night full of no fears<br>" +
-                "<br>" +
-                "But if I had one wishful field tonight<br>" +
-                "I'd ask for the sun to never rise<br>" +
-                "If God passed a mic to me to speak<br>" +
-                "I'd say stay in bed, world<br>" +
-                "Sleep in peace</html>";
-        
-		JLabel movieText = new JLabel(lyrics);
-		movieText.setBounds(130, 200, 500, 500);
-		//movieText.setLocation(120, 290);
-		//movieText.setFont(new Font("Serif", Font.PLAIN, 14));
-		movieText.setForeground(Color.BLACK);
 		
-		add(movieText);
 		add(submit);
+		
+	}
+	
+	public void printOrder() {
+		List<Product> products = productService.getShoppingCart();
+//		System.out.println("printOrder()");
+//		this.productService.getShoppingCart().forEach((p)->{
+//			System.out.println(p.toString());
+//		});
+		
+		StringBuilder order = new StringBuilder();
+		
+		order.append("<html><br><b>Your order</b><br><br>");
+		
+		// movies
+		order.append("Movies:<br>");
+
+		for(Product product : products) {
+			if(product instanceof Movie) {
+				Movie movie = (Movie)product;
+				order.append(HtmlEntity.getSpaces(3)+movie.getName()+" $"+movie.getQuantity()*movie.getPrice());
+				order.append("<br>");
+			}
+		}
+		
+		order.append("<br>");
+		
+		order.append("Snacks:<br>");
+
+		for(Product product : products) {
+			if(product instanceof Drink) {
+				Drink drink = (Drink)product;
+				order.append(HtmlEntity.getSpaces(3)+drink.getName()+" $"+drink.getQuantity()*drink.getPrice());
+				order.append("<br>");
+			}
+		}
+		
+		order.append("<br>");
+        
+        order.append("</html>");
+        
+		JLabel orderText = new JLabel(order.toString());
+		orderText.setBounds(50, 20, 900, 500);
+		orderText.setForeground(Color.BLACK);
+		
+		add(orderText);
+	}
+	
+	public void payOrder() {
 		
 	}
 	

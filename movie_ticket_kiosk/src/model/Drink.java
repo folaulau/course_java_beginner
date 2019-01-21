@@ -5,10 +5,15 @@ public class Drink extends Product {
 	public static final String LEMONADE = "Lemondae";
 	public static final String WATER = "Water";
 	public static final String SPRITE = "Sprite";
-
+	public static final String FANTA = "Fanta";
+	public static final String COKE = "Coke";
+	public static final String PEPSI = "Pepsi";
+	
 	public static final String SMALL = "Small";
 	public static final String MEDIUM = "Medium";
 	public static final String LARGE = "Large";
+	
+	
 	
 	// user enum {small, medium, large}
 	private String size;

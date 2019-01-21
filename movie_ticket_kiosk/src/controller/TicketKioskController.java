@@ -7,11 +7,15 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import model.Drink;
+import model.Movie;
+import model.Popcorn;
 import service.ProductService;
 import utility.Contants;
 import utility.ScreenDimensionUtil;
@@ -46,6 +50,8 @@ public class TicketKioskController extends JFrame {
 		
 		Container con = getContentPane();
 		con.setLayout(null);
+		
+		productService = new ProductService();
 
 		movieScreen = new MovieScreen();
 		checkOutScreen = new CheckOutScreen();
@@ -95,6 +101,7 @@ public class TicketKioskController extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("submit movie and go to snack");
+				movieScreen.submit();
 				goTo(Contants.SNACK_SCREEN);
 			}
 		});
@@ -107,13 +114,14 @@ public class TicketKioskController extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("submit snack and go to checkout");
+				snackScreen.submit();
 				goTo(Contants.CHECKOUT_SCREEN);
 			}
 		});
 		
 		snackScreen.add(submitSnack);
 		
-		submitOrder.setBounds(50, (int)(ScreenDimensionUtil.SCREEN_HEIGHT*.45), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
+		submitOrder.setBounds(50, (int)(ScreenDimensionUtil.SCREEN_HEIGHT*.65), ScreenDimensionUtil.BUTTON_WIDTH, ScreenDimensionUtil.BUTTON_HEIGHT);
 		submitOrder.addActionListener(new ActionListener() {
 
 			@Override
@@ -124,7 +132,7 @@ public class TicketKioskController extends JFrame {
 		
 		checkOutScreen.add(submitOrder);
 		
-		productService = new ProductService();
+		
 		
 		con.add(homeScreen);
 	}
@@ -169,7 +177,10 @@ public class TicketKioskController extends JFrame {
 			homeScreen.remove(snackScreen);
 			homeScreen.remove(checkOutScreen);
 			homeScreen.remove(movieScreen);
+			
+			checkOutScreen.printOrder();
 			homeScreen.add(checkOutScreen);
+			
 			checkOutScreen.revalidate();
 			checkOutScreen.repaint();
 			//homeScreen.revalidate();
