@@ -177,7 +177,7 @@ public class TicketKioskController extends JFrame {
 			homeScreen.remove(snackScreen);
 			homeScreen.remove(checkOutScreen);
 			homeScreen.remove(movieScreen);
-			
+			checkOutScreen.removeAll();
 			checkOutScreen.printOrder();
 			homeScreen.add(checkOutScreen);
 			
@@ -199,7 +199,7 @@ public class TicketKioskController extends JFrame {
 			//homeScreen.revalidate();
 			//homeScreen.repaint();
 			break;
-		default:
+		default:// movie or home screen
 			//this.checkOutScreen.setVisible(false);
 			//this.snackScreen.setVisible(false);
 			//homeScreen.removeAll();
