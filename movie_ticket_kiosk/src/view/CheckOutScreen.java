@@ -106,7 +106,7 @@ public class CheckOutScreen extends JPanel {
 					change = customerInput-orderTotal;
 					System.out.println("input: "+customerInput+", orderTotal: "+orderTotal+", change: "+change);
 					
-					if(change==0) {
+					if(change>=0) {
 						productService.resetShoppingCart();
 					}
 					
@@ -125,7 +125,7 @@ public class CheckOutScreen extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		System.out.println("paintComponent(..)");
+		//System.out.println("paint(..)");
 		System.out.println("Your change $"+change);
 		g.drawString("Your change $"+change, 250,160);
 	}
